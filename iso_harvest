@@ -23,10 +23,10 @@ logger.setLevel(logging.DEBUG)
 SAVE_DIR = "/srv/http/iso"
 
 
-def harvest_isos(catalogUrl, outDir):
+def harvest_isos(catalogUrl, outDir, select=None, skip=None):
     rootpath = os.path.join(SAVE_DIR, outDir)
     foundisos = []
-    catalog = Crawl(catalogUrl, debug=True)
+    catalog = Crawl(catalogUrl, select=select, skip=skip, debug=True)
     isos = [(d.id, s.get("url")) for d in catalog.datasets for s in d.services if s.get("service").lower() == "iso"]
     for iso in isos:
         try:
@@ -55,3 +55,12 @@ harvest_isos("http://thredds.axiomalaska.com/thredds/catalogs/aoos.html", "aoos"
 
 # CeNCOOS
 harvest_isos("http://thredds.axiomalaska.com/thredds/catalogs/cencoos.html", "cencoos")
+
+# UNIDATA
+unidata_selects = [".*Best.*"]
+unidata_skips   = Crawl.SKIPS  + [".*grib2", ".*grib1", ".*GrbF.*", ".*ncx2",
+                                  "Radar Data", "Station Data",
+                                  "Point Feature Collections", "Satellite Data",
+                                  "Unidata NEXRAD Composites \(GINI\)",
+                                  "Unidata case studies"]
+harvest_isos("http://thredds.ucar.edu/thredds/catalog.html", "unidata", select=unidata_selects, skip=unidata_skips)
