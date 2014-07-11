@@ -20,7 +20,8 @@ logger.addHandler(fh)
 logger.addHandler(ch)
 logger.setLevel(logging.DEBUG)
 
-SAVE_DIR="/srv/http/iso"
+SAVE_DIR = "/srv/http/iso"
+
 
 def harvest_isos(catalogUrl, outDir):
     rootpath = os.path.join(SAVE_DIR, outDir)
@@ -29,27 +30,28 @@ def harvest_isos(catalogUrl, outDir):
     isos = [(d.id, s.get("url")) for d in catalog.datasets for s in d.services if s.get("service").lower() == "iso"]
     for iso in isos:
         try:
-            filename = iso[0].replace("/","_") + ".iso.xml"
-	    isourl = iso[1]
-	    foundisos.append(filename)
+            filename = iso[0].replace("/", "_") + ".iso.xml"
+            isourl = iso[1]
+            foundisos.append(filename)
             filepath = os.path.join(rootpath, filename)
             logger.info("Downloading/Saving %s" % filepath)
             urllib.urlretrieve(isourl, filepath)
         except KeyboardInterrupt:
-	    logger.info("Caught interrupt, exiting")
-	    sys.exit(0)
+            logger.info("Caught interrupt, exiting")
+            sys.exit(0)
         except BaseException:
             logger.exception("Error!")
     clean_not_found_files(rootpath, foundisos)
+
 
 def clean_not_found_files(check_dir, foundfiles):
     for f in os.listdir(check_dir):
         if (f not in foundfiles):
             logger.info("%s not found in catalog, deleting...", f)
-	    os.remove(os.path.join(check_dir, f))
+        os.remove(os.path.join(check_dir, f))
 
 # AOOS
-harvest_isos("http://thredds.axiomalaska.com/thredds/catalogs/aoos.html","aoos")
+harvest_isos("http://thredds.axiomalaska.com/thredds/catalogs/aoos.html", "aoos")
 
 # CeNCOOS
-harvest_isos("http://thredds.axiomalaska.com/thredds/catalogs/cencoos.html","cencoos")
+harvest_isos("http://thredds.axiomalaska.com/thredds/catalogs/cencoos.html", "cencoos")
