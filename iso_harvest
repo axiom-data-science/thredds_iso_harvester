@@ -69,5 +69,6 @@ unidata_skips   = Crawl.SKIPS  + [".*grib2", ".*grib1", ".*GrbF.*", ".*ncx2",
                                   "Radar Data", "Station Data",
                                   "Point Feature Collections", "Satellite Data",
                                   "Unidata NEXRAD Composites \(GINI\)",
-                                  "Unidata case studies"]
+                                  "Unidata case studies",
+				  ".*Reflectivity-[0-9]{8}"]
 harvest_isos("http://thredds.ucar.edu/thredds/catalog.html", "unidata", select=unidata_selects, skip=unidata_skips)
