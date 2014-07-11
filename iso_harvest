@@ -2,7 +2,7 @@
 
 import os
 import sys
-import urllib
+import requests
 from thredds_crawler.crawl import Crawl
 
 import logging
@@ -31,11 +31,18 @@ def harvest_isos(catalogUrl, outDir, select=None, skip=None):
     for iso in isos:
         try:
             filename = iso[0].replace("/", "_") + ".iso.xml"
-            isourl = iso[1]
             foundisos.append(filename)
             filepath = os.path.join(rootpath, filename)
             logger.info("Downloading/Saving %s" % filepath)
-            urllib.urlretrieve(isourl, filepath)
+
+            r = requests.get(iso[1], stream=True)
+            if r.ok:
+                with open(filepath, 'wb') as f:
+                    for chunk in r.iter_content():
+                        if chunk:
+                            f.write(chunk)
+            else:
+                logger.info("Got a non-200 status code (%s) from %s" % (r.status_code, iso[1]))
         except KeyboardInterrupt:
             logger.info("Caught interrupt, exiting")
             sys.exit(0)
