@@ -3,36 +3,41 @@
 import os
 import sys
 import requests
+import argparse
 from thredds_crawler.crawl import Crawl
 
 import logging
 import logging.handlers
 
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger('thredds_crawler')
-fh = logging.handlers.RotatingFileHandler('/var/log/iso_harvest/iso_harvest.log', maxBytes=1024*1024*10, backupCount=5)
-fh.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-fh.setFormatter(formatter)
 ch.setFormatter(formatter)
-logger.addHandler(fh)
 logger.addHandler(ch)
 logger.setLevel(logging.DEBUG)
 
-SAVE_DIR = "/srv/http/iso"
+def add_file_logger(log_file):
+    fh = logging.handlers.RotatingFileHandler(log_file, maxBytes=1024*1024*10, backupCount=5)
+    fh.setLevel(logging.DEBUG)
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
 
-
-def harvest_isos(catalogUrl, outDir, select=None, skip=None):
-    rootpath = os.path.join(SAVE_DIR, outDir)
-    foundisos = []
-    catalog = Crawl(catalogUrl, select=select, skip=skip, debug=True)
+def harvest_isos(catalog_url, out_dir, log_file=None, select=None, skip=None):
+    if log_file is not None:
+       add_file_logger(log_file)
+    if skip is None:
+        skip = Crawl.SKIPS
+    else:
+        skip.extend(Crawl.SKIPS)
+    found_isos = []
+    catalog = Crawl(catalog_url, select=select, skip=skip, debug=True)
     isos = [(d.id, s.get("url")) for d in catalog.datasets for s in d.services if s.get("service").lower() == "iso"]
     for iso in isos:
         try:
             filename = iso[0].replace("/", "_") + ".iso.xml"
-            foundisos.append(filename)
-            filepath = os.path.join(rootpath, filename)
+            found_isos.append(filename)
+            filepath = os.path.join(out_dir, filename)
             logger.info("Downloading/Saving %s" % filepath)
 
             r = requests.get(iso[1], stream=True)
@@ -48,27 +53,22 @@ def harvest_isos(catalogUrl, outDir, select=None, skip=None):
             sys.exit(0)
         except BaseException:
             logger.exception("Error!")
-    clean_not_found_files(rootpath, foundisos)
+    clean_not_found_files(out_dir, found_isos)
 
 
-def clean_not_found_files(check_dir, foundfiles):
+def clean_not_found_files(check_dir, found_files):
     for f in os.listdir(check_dir):
-        if (f not in foundfiles):
+        if (f not in found_files):
             logger.info("%s not found in catalog, deleting...", f)
             os.remove(os.path.join(check_dir, f))
 
-# AOOS
-harvest_isos("http://thredds.axiomalaska.com/thredds/catalogs/aoos.html", "aoos")
-
-# CeNCOOS
-harvest_isos("http://thredds.axiomalaska.com/thredds/catalogs/cencoos.html", "cencoos")
-
-# UNIDATA
-unidata_selects = [".*Best.*"]
-unidata_skips   = Crawl.SKIPS  + [".*grib2", ".*grib1", ".*GrbF.*", ".*ncx2",
-                                  "Radar Data", "Station Data",
-                                  "Point Feature Collections", "Satellite Data",
-                                  "Unidata NEXRAD Composites \(GINI\)",
-                                  "Unidata case studies",
-				  ".*Reflectivity-[0-9]{8}"]
-harvest_isos("http://thredds.ucar.edu/thredds/catalog.html", "unidata", select=unidata_selects, skip=unidata_skips)
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Harvest ISO records from an ncISO enabled THREDDS server.')
+    parser.add_argument('--output-dir', '-o', dest='out_dir', required=True, help='ISO output directory')
+    parser.add_argument('--select', '-s', dest='select', action='append', help='Data set select pattern (accepts multiple)')
+    parser.add_argument('--skip', '-x', dest='skip', action='append', help='Data set skip pattern (accepts multiple)')
+    parser.add_argument('--log', '-l', dest='log_file', help='Log file')
+    parser.add_argument('catalog_url', help='THREDDS catalog URL to parse')
+    parser.set_defaults(defaultSkips=True)
+    args = parser.parse_args()
+    harvest_isos(catalog_url=args.catalog_url, out_dir=args.out_dir, log_file=args.log_file, select=args.select, skip=args.skip)
