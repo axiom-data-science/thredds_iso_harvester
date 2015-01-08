@@ -31,12 +31,14 @@ to view options.
 Example run:
 
 ```
-./thredds_iso_harvester.py --output-dir=/srv/http/iso-waf --log=/var/log/iso-harvest.log http://yourserver.org/thredds/catalog.html
+./thredds_iso_harvester.py --output-dir=/srv/http/iso-waf --log=/var/log/iso-harvest.log \
+  http://yourserver.org/thredds/catalog.html
 ```
 
 Example for downloading a subset of data sets:
 ```
-./thredds_iso_harvester.py --output-dir=/srv/http/iso-waf --log=/var/log/iso-harvest.log --select=DATASET1 --select=ANOTHER_DATASET_ID http://yourserver.org/thredds/catalog.html
+./thredds_iso_harvester.py --output-dir=/srv/http/iso-waf --log=/var/log/iso-harvest.log \
+  --select=DATASET1 --select=ANOTHER_DATASET_ID http://yourserver.org/thredds/catalog.html
 ```
 
 ### Python class
