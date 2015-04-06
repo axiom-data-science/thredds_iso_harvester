@@ -4,12 +4,17 @@ Python class/script to harvest ISO metadata records from an [__ncISO enabled__](
 
 See https://www.unidata.ucar.edu/software/thredds/v4.3/tds/tds4.2/reference/ncISO.html for instructions on enabling ncISO in [THREDDS](http://www.unidata.ucar.edu/software/thredds/current/tds/TDS.html).
 
-## Dependencies
-
-This project uses the [thredds_crawler](https://github.com/kwilcox/thredds_crawler) project to crawl THREDDS catalogs. To install the dependency:
+## Install
 
 ```
-pip install thredds_crawler
+pip install git+git://github.com/axiom-data-science/thredds_iso_harvester
+```
+
+## Upgrade
+
+```
+pip install --upgrade --no-deps git+git://github.com/axiom-data-science/thredds_iso_harvester
+pip install git+git://github.com/axiom-data-science/thredds_iso_harvester
 ```
 
 Note: depending on your pip installation, you may need to run the above command using sudo.
@@ -45,7 +50,7 @@ Example for downloading a subset of data sets:
 ### Python class
 
 ```
-from thredds_iso_harvester import ThreddsIsoHarvester
+from thredds_iso_harveste.harvest import ThreddsIsoHarvester
 
 ThreddsIsoHarvester(catalog_url="http://yourserver.org/thredds/catalog.html", out_dir="/srv/http/iso-waf")
 ```

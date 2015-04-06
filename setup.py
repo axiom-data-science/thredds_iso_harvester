@@ -12,7 +12,7 @@ reqs = [line.strip() for line in open('requirements.txt')]
 setup(
     name                = "thredds_iso_harvester",
     version             = __version__,
-    description         = "A Python library for generating ISO WAF folders from THREDDS servers",
+    description         = "A Python library for generating ISO WAF folders from ncISO enabled THREDDS servers",
     long_description    = readme(),
     license             = 'GPLv3',
     author              = "Axiom Data Science",
