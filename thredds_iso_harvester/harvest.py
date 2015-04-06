@@ -1,5 +1,5 @@
-#! /usr/bin/env python
-
+#!python
+# coding=utf-8
 import os
 import sys
 import requests
@@ -25,6 +25,10 @@ class ThreddsIsoHarvester:
             skip = Crawl.SKIPS
         else:
             skip.extend(Crawl.SKIPS)
+
+        if not os.path.exists(out_dir):
+            os.makedirs(out_dir)
+
         found_isos = []
         catalog = Crawl(catalog_url, select=select, skip=skip, debug=True)
         isos = [(d.id, s.get("url")) for d in catalog.datasets for s in d.services if s.get("service").lower() == "iso"]

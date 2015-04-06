@@ -1,4 +1,5 @@
-#! /usr/bin/env python
+#!python
+# coding=utf-8
 import sys
 from setuptools import setup, find_packages
 from thredds_iso_harvester import __version__
