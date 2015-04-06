@@ -6,6 +6,14 @@ See https://www.unidata.ucar.edu/software/thredds/v4.3/tds/tds4.2/reference/ncIS
 
 ## Install
 
+First install [lxml's dependencies](http://lxml.de/installation.html#requirements):
+
+```
+sudo apt-get install libxml2-dev libxslt-dev python-dev
+```
+
+Then install using pip:
+
 ```
 pip install git+git://github.com/axiom-data-science/thredds_iso_harvester
 ```
