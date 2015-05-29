@@ -58,7 +58,7 @@ Example for downloading a subset of data sets:
 ### Python class
 
 ```
-from thredds_iso_harveste.harvest import ThreddsIsoHarvester
+from thredds_iso_harvester.harvest import ThreddsIsoHarvester
 
 ThreddsIsoHarvester(catalog_url="http://yourserver.org/thredds/catalog.html", out_dir="/srv/http/iso-waf")
 ```
