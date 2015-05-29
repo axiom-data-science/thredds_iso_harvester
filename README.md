@@ -36,7 +36,7 @@ thredds-iso-harvester can be run from the command line or as a Python class.
 Run
 
 ```
-./thredds_iso_harvester.py -h
+thredds_iso_harvester -h
 ```
 
 to view options.
@@ -44,13 +44,13 @@ to view options.
 Example run:
 
 ```
-./thredds_iso_harvester.py --output-dir=/srv/http/iso-waf --log=/var/log/iso-harvest.log \
+thredds_iso_harvester --output-dir=/srv/http/iso-waf --log=/var/log/iso-harvest.log \
   http://yourserver.org/thredds/catalog.html
 ```
 
 Example for downloading a subset of data sets:
 ```
-./thredds_iso_harvester.py --output-dir=/srv/http/iso-waf --log=/var/log/iso-harvest.log \
+thredds_iso_harvester --output-dir=/srv/http/iso-waf --log=/var/log/iso-harvest.log \
   --select=DATASET1 --select=ANOTHER_DATASET_ID \ 
   http://yourserver.org/thredds/catalog.html
 ```
