@@ -18,7 +18,7 @@ logger.addHandler(ch)
 logger.setLevel(logging.DEBUG)
 
 class ThreddsIsoHarvester:
-    def __init__(self, catalog_url, out_dir, log_file=None, select=None, skip=None):
+    def __init__(self, catalog_url, out_dir, log_file=None, select=None, skip=None, clean=False):
         if log_file is not None:
            self.__add_file_logger(log_file)
         if skip is None:
@@ -52,7 +52,8 @@ class ThreddsIsoHarvester:
                 sys.exit(0)
             except BaseException:
                 logger.exception("Error!")
-        self.__clean_not_found_files(out_dir, found_isos)
+        if clean:
+            self.__clean_not_found_files(out_dir, found_isos)
 
     def __add_file_logger(self, log_file):
         fh = logging.handlers.RotatingFileHandler(log_file, maxBytes=1024*1024*10, backupCount=5)
