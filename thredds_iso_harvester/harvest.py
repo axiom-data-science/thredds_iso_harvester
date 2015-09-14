@@ -18,7 +18,7 @@ logger.addHandler(ch)
 logger.setLevel(logging.DEBUG)
 
 class ThreddsIsoHarvester:
-    def __init__(self, catalog_url, out_dir, log_file=None, select=None, skip=None, clean=False):
+    def __init__(self, catalog_url, out_dir, log_file=None, select=None, skip=None, clean=True):
         if log_file is not None:
            self.__add_file_logger(log_file)
         if skip is None:
