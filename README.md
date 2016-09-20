@@ -13,21 +13,12 @@ Create a script which harvests from a THREDDS target, for example:
 ```
 #!python
 # coding=utf-8
-import os
-import argparse
 
-from thredds_crawler.crawl import Crawl
 from thredds_iso_harvester.harvest import ThreddsIsoHarvester
-
-parser = argparse.ArgumentParser(description='Download ISO metadata from THREDDS catalogs')
-parser.add_argument('--out', dest='SAVE_DIR', default='/srv/iso', help='Destination root for downloaded ISOs')
-parser.add_argument('--log', dest='LOG_DIR', default='/var/log/iso_harvest', help='Log root directory')
-args = parser.parse_args()
 
 # AOOS
 ThreddsIsoHarvester(catalog_url="http://thredds.aoos.org/thredds/catalog.xml",
-    out_dir=args.SAVE_DIR + "/aoos",
-    log_file=args.LOG_DIR + "/aoos.log")
+    out_dir="/srv/iso/aoos")
 ```
 
 Save this file and then run the Docker image, passing the harvesting script
