@@ -4,6 +4,40 @@ Python class/script to harvest ISO metadata records from an [__ncISO enabled__](
 
 See https://www.unidata.ucar.edu/software/thredds/v4.3/tds/tds4.2/reference/ncISO.html for instructions on enabling ncISO in [THREDDS](http://www.unidata.ucar.edu/software/thredds/current/tds/TDS.html).
 
+## Docker
+
+By default, the Docker image runs the script it finds at `/srv/harvest.py`.
+
+Create a script which harvests from a THREDDS target, for example:
+
+```
+#!python
+# coding=utf-8
+import os
+import argparse
+
+from thredds_crawler.crawl import Crawl
+from thredds_iso_harvester.harvest import ThreddsIsoHarvester
+
+parser = argparse.ArgumentParser(description='Download ISO metadata from THREDDS catalogs')
+parser.add_argument('--out', dest='SAVE_DIR', default='/srv/iso', help='Destination root for downloaded ISOs')
+parser.add_argument('--log', dest='LOG_DIR', default='/var/log/iso_harvest', help='Log root directory')
+args = parser.parse_args()
+
+# AOOS
+ThreddsIsoHarvester(catalog_url="http://thredds.aoos.org/thredds/catalog.xml",
+    out_dir=args.SAVE_DIR + "/aoos",
+    log_file=args.LOG_DIR + "/aoos.log")
+```
+
+Save this file and then run the Docker image, passing the harvesting script
+and ISO output directory as volumes.
+
+```
+docker run --rm -v $(pwd)/harvest.py:/srv/harvest.py $(pwd)/iso:/srv/iso \
+  axiom/thredds_iso_harvester
+```
+
 ## Install
 
 First install [lxml's dependencies](http://lxml.de/installation.html#requirements):
