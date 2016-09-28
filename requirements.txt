@@ -1,1 +1,1 @@
-thredds_crawler
+thredds_crawler>=1.5.1
