@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import sys
 import argparse
 from thredds_iso_harvester.harvest import ThreddsIsoHarvester
+
 
 def main():
     parser = argparse.ArgumentParser(description='Harvest ISO records from an ncISO enabled THREDDS server.')
