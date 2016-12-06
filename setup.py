@@ -20,7 +20,7 @@ setup(
     version             = version(),
     description         = "A Python library for generating ISO WAF folders from ncISO enabled THREDDS servers",
     long_description    = readme(),
-    license             = 'GPLv3',
+    license             = 'MIT',
     author              = "Axiom Data Science",
     author_email        = "dev@axiomdatascience.com",
     url                 = "https://github.com/axiom-data-science/thredds_iso_harvester",
