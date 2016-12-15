@@ -25,7 +25,7 @@ Save this file and then run the Docker image, passing the harvesting script
 and ISO output directory as volumes.
 
 ```
-docker run --rm -v $(pwd)/harvest.py:/srv/harvest.py $(pwd)/iso:/srv/iso \
+docker run --rm -v $(pwd)/harvest.py:/srv/harvest.py -v $(pwd)/iso:/srv/iso \
   axiom/thredds_iso_harvester
 ```
 
